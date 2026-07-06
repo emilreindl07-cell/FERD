@@ -1,101 +1,52 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Album Cover Generator</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #121212;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        #loader {
-            text-align: center;
-            display: block;
-        }
+<title>Album Cover</title>
 
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #1DB954;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
+<style>
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+body{
+    margin:0;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:Arial, Helvetica, sans-serif;
+}
 
-        #result {
-            display: none;
-            text-align: center;
-            animation: fadeIn 1s ease-in;
-        }
+#container{
+    text-align:center;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+h1{
+    font-size:20px;
+    font-weight:400;
+    letter-spacing:3px;
+}
 
-        img {
-            max-width: 90vw;
-            max-height: 70vh;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-radius: 4px;
-        }
+p{
+    color:#777;
+    margin-top:20px;
+}
 
-        h1 { margin-top: 20px; font-weight: 300; }
-    </style>
+</style>
+
 </head>
+
 <body>
 
-    <!-- Lade-Bildschirm -->
-    <div id="loader">
-        <div class="spinner"></div>
-        <p>Generating Album Cover...</p>
-    </div>
+<div id="container">
 
-    <!-- Ergebnis-Bildschirm -->
-    <div id="result">
-        <img id="albumArt" src="" alt="Album Art">
-        <h1 id="albumTitle">New Discovery</h1>
-        <p>Scan erneut für ein anderes Cover</p>
-    </div>
+<h1>Generating Album Cover...</h1>
 
-    <script>
-        window.onload = function() {
-            const loader = document.getElementById('loader');
-            const result = document.getElementById('result');
-            const img = document.getElementById('albumArt');
-            const title = document.getElementById('albumTitle');
+<p>Please wait.</p>
 
-            // Zufälliges Bild von Unsplash (Themen: Abstract, Music, Art)
-            // Der Zeitstempel am Ende verhindert Caching, damit jedes Mal ein neues Bild kommt
-            const randomSeed = Math.floor(Math.random() * 10000);
-            img.src = `[picsum.photos](https://picsum.photos/seed/${randomSeed}/800/800)`;
+</div>
 
-            // Zufällige Titel-Generierung
-            const titles = ["Neon Nights", "Silent Echo", "Digital Dust", "Ethereal", "Velocity", "Urban Jungle"];
-            title.innerText = titles[Math.floor(Math.random() * titles.length)];
-
-            // 5 Sekunden warten, dann anzeigen
-            setTimeout(() => {
-                loader.style.display = 'none';
-                result.style.display = 'block';
-            }, 5000);
-        };
-    </script>
 </body>
+
 </html>
