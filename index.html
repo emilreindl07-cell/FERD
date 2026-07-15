@@ -1,52 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Album Cover</title>
+  <style>
+    * { box-sizing: border-box; }
 
-<title>Album Cover</title>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #fff;
+    }
 
-<style>
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-body{
-    margin:0;
-    background:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    font-family:Arial, Helvetica, sans-serif;
-}
+    main {
+      width: min(92vw, 1024px);
+      text-align: center;
+    }
 
-#container{
-    text-align:center;
-}
+    #status {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
 
-h1{
-    font-size:20px;
-    font-weight:400;
-    letter-spacing:3px;
-}
+    #cover {
+      display: none;
+      width: 100%;
+      max-width: 1024px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
 
-p{
-    color:#777;
-    margin-top:20px;
-}
+    #error {
+      display: none;
+      max-width: 680px;
+      margin: 20px auto 0;
+      line-height: 1.5;
+      font-size: 14px;
+    }
 
-</style>
-
+    button {
+      display: none;
+      margin: 22px auto 0;
+      padding: 12px 18px;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+      font: inherit;
+    }
+  </style>
 </head>
-
 <body>
+  <main>
+    <p id="status">Generating album cover…</p>
+    <img id="cover" alt="AI-generated album cover" />
+    <p id="error"></p>
+    <button id="retry" type="button">Try again</button>
+  </main>
 
-<div id="container">
+  <script>
+    const statusEl = document.getElementById("status");
+    const coverEl = document.getElementById("cover");
+    const errorEl = document.getElementById("error");
+    const retryButton = document.getElementById("retry");
 
-<h1>Generating Album Cover...</h1>
+    async function generateCover() {
+      statusEl.style.display = "block";
+      statusEl.textContent = "Generating album cover…";
+      coverEl.style.display = "none";
+      errorEl.style.display = "none";
+      retryButton.style.display = "none";
 
-<p>Please wait.</p>
+      try {
+        const response = await fetch("/.netlify/functions/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
 
-</div>
+        const data = await response.json();
 
+        if (!response.ok) {
+          throw new Error(data.error || "The image could not be generated.");
+        }
+
+        coverEl.src = `data:${data.mimeType};base64,${data.imageBase64}`;
+        coverEl.onload = () => {
+          statusEl.style.display = "none";
+          coverEl.style.display = "block";
+        };
+      } catch (error) {
+        console.error(error);
+        statusEl.style.display = "none";
+        errorEl.textContent = error.message;
+        errorEl.style.display = "block";
+        retryButton.style.display = "block";
+      }
+    }
+
+    retryButton.addEventListener("click", generateCover);
+
+    // A new image is generated on every fresh page load / QR scan.
+    generateCover();
+  </script>
 </body>
-
 </html>
